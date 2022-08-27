@@ -21,7 +21,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login', 'register', 'find']]);
+        $this->middleware('auth:api', ['except' => ['login', 'register']]);
     }
 
     /**
@@ -33,20 +33,22 @@ class AuthController extends Controller
     {
         $credentials = request(['email', 'password']);
         $this->insertLog([
-            'input' => json_encode($credentials, true)            
+            'input' => json_encode($credentials, true),
+            'action' => 'login'                
         ]);
         if (! $token = auth()->attempt($credentials)) {
             $response = ['success' => false, 'error' => 'Unauthorized'];
             $this->insertLog([
                 'input' => json_encode($response, true),
+                'action' => 'login',
                 'output' => json_decode($response, true)
             ], 1);
             return response()->json($response, 401);
         }
         $finalReponse = $this->respondWithToken($token);
-        //return strlen(json_encode($finalReponse, true));
         $this->insertLog([
             'input' => json_encode($credentials['email'], true),
+            'action' => 'login',
             'output' => json_encode($finalReponse, true)   
         ], 1);
         return $finalReponse;
@@ -55,7 +57,8 @@ class AuthController extends Controller
     public function register(RegisterRequest $request)
     {   
         $this->insertLog([
-            'input' => json_encode($request->data, true)            
+            'input' => json_encode($request->data, true),
+            'action' => 'register'        
         ]);
         $aResponse = $this->validateRegionCommune($request);
         if(count($aResponse['errors'])){
@@ -75,7 +78,45 @@ class AuthController extends Controller
         ]);
     }
 
+    public function delete(Request $request){
+        $input = "dni: ".(isset($request->dni) ? $request->dni : ""). " email: ".(isset($request->email) ? $request->email : "");
+        $this->insertLog([
+            'input' => $input,
+            'action' => 'delete'
+        ]);
+        $usuario = null;
+        if(isset($request->dni)){
+            $usuario = User::where('dni', $request->dni)->where('status', 'A')->first();
+        }else if(isset($request->email)){
+            $usuario = User::where('email', $request->email)->where('status', 'A')->first();
+        }
+        if($usuario){
+            $usuario->status = 'trash';
+            $usuario->save();
+            $aResponse = [
+                'success' => true,
+                'message' => "El usuario ingresado fue eliminado exitosamente"
+            ];
+        }else{
+            $aResponse = [
+                'success' => false,
+                'message' => "Registro no existe"
+            ];
+        }
+        $this->insertLog([
+            'input' => $input,
+            'action' => 'delete',
+            'output' => json_encode($aResponse, true),
+        ], 1);
+        return $aResponse;
+    }
+
     public function find(Request $request){
+        $input = "dni: ".(isset($request->dni) ? $request->dni : ""). " email: ".(isset($request->email) ? $request->email : "");
+        $this->insertLog([
+            'input' => $input,
+            'action' => 'find'
+        ]);
         $aResponse = [
             'success' => false,
             'message' => "No se ingresaron filtros validos para realizar la busqueda"
@@ -122,6 +163,11 @@ class AuthController extends Controller
                 ];
             }
         }
+        $this->insertLog([
+            'input' => $input,
+            'action' => 'find',
+            'output' => json_encode($aResponse, true)
+        ], 1);
         return $aResponse;
     }
 
@@ -208,6 +254,7 @@ class AuthController extends Controller
         unset($data['password']);
         $this->insertLog([
             'input' => json_encode($data, true),
+            'action' => 'register',
             'output' => json_encode($response, true),
         ], 1);
         return $response;

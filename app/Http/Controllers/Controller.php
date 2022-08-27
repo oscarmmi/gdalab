@@ -16,6 +16,9 @@ class Controller extends BaseController
         if(!(env('APP_DEBUG') && $output)){
             $log = new Log();
             $log->ip = $_SERVER['REMOTE_ADDR'];
+            if(isset($data['action'])){
+                $log->action = $data['action'];
+            }
             if(isset($data['input'])){
                 $log->input = $data['input'];
             }

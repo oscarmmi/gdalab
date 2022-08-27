@@ -16,6 +16,7 @@ class CreateLogTable extends Migration
         Schema::create('log', function (Blueprint $table) {
             $table->id();
             $table->string('ip')->nullable(true);
+            $table->string('action')->nullable(true);
             $table->string('input', 1000)->nullable(true);
             $table->string('output', 1000)->nullable(true);
             $table->datetime('created_at')->nullable(true);

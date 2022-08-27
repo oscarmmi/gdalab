@@ -20,6 +20,7 @@ Route::group([
     'prefix' => 'auth'
 ], function ($router) {    
     Route::get('find', [\App\Http\Controllers\AuthController::class, 'find'])->name('find');
+    Route::delete('delete', [\App\Http\Controllers\AuthController::class, 'delete'])->name('delete');
     Route::post('logout', [\App\Http\Controllers\AuthController::class, 'logout'])->name('logout');
     Route::post('refresh', [\App\Http\Controllers\AuthController::class, 'refresh'])->name('refresh');
 });

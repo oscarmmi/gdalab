@@ -12,6 +12,7 @@ class Log extends Model
     
     protected $fillable = [
         'ip',
+        'action',
         'input',
         'output',
         'created_at'
