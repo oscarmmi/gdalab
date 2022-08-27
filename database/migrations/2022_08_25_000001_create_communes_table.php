@@ -14,11 +14,12 @@ class CreateCommunesTable extends Migration
     public function up()
     {
         Schema::create('communes', function (Blueprint $table) {
-            $table->integer('id_com');
+            $table->id('id_com');
+            //$table->integer('id_com');
             $table->integer('id_reg');
             $table->string('description');
             $table->timestamps();
-            $table->primary(['id_reg', 'id_com']);
+            //$table->primary(['id_reg', 'id_com']);
             $table->index(['id_reg']);
         });
 

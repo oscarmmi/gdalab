@@ -7,12 +7,11 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Customers extends Authenticatable implements JWTSubject
+class User extends Authenticatable implements JWTSubject
 {
     use Notifiable;
 
     protected $table = 'customers';
-    protected $primaryKey = 'dni';
 
     protected $fillable = [
         'dni',
@@ -23,7 +22,8 @@ class Customers extends Authenticatable implements JWTSubject
         'last_name',
         'address',
         'date_reg',
-        'status'
+        'status',
+        'password'
     ];
 
     // Rest omitted for brevity

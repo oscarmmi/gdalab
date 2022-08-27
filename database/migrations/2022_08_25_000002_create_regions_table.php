@@ -14,10 +14,11 @@ class CreateRegionsTable extends Migration
     public function up()
     {
         Schema::create('regions', function (Blueprint $table) {
-            $table->integer('id_reg');
+            $table->id('id_reg');
+            //$table->integer('id_reg');
             $table->string('description');
             $table->timestamps();
-            $table->primary('id_reg');
+            //$table->primary('id_reg');
         });
 
         DB::statement("

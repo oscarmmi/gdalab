@@ -14,6 +14,7 @@ class CreateCustomersTable extends Migration
     public function up()
     {
         Schema::create('customers', function (Blueprint $table) {
+            $table->id();
             $table->string('dni')->nullable(false)->unique();
             $table->integer('id_reg');
             $table->integer('id_com');
@@ -21,12 +22,12 @@ class CreateCustomersTable extends Migration
             $table->string('name');
             $table->string('last_name');
             $table->string('address');
-            $table->timestamp('date_reg');
+            $table->datetime('date_reg');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
-            $table->primary(['dni', 'id_reg', 'id_com']);
+            //$table->primary(['dni', 'id_reg', 'id_com']);
             $table->index(['email']);
         });
 
