@@ -32,10 +32,24 @@ class AuthController extends Controller
     public function login()
     {
         $credentials = request(['email', 'password']);
+        $this->insertLog([
+            'input' => json_encode($credentials, true)            
+        ]);
         if (! $token = auth()->attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+            $response = ['success' => false, 'error' => 'Unauthorized'];
+            $this->insertLog([
+                'input' => json_encode($response, true),
+                'output' => json_decode($response, true)
+            ], 1);
+            return response()->json($response, 401);
         }
-        return $this->respondWithToken($token);
+        $finalReponse = $this->respondWithToken($token);
+        //return strlen(json_encode($finalReponse, true));
+        $this->insertLog([
+            'input' => json_encode($credentials['email'], true),
+            'output' => json_encode($finalReponse, true)   
+        ], 1);
+        return $finalReponse;
     }
 
     public function register(RegisterRequest $request)
@@ -56,9 +70,13 @@ class AuthController extends Controller
             'last_name' => $request->data['last_name'],
             'address' => $request->data['address'],
             'date_reg' => date('Y-m-d H:i:s'),
-            'status' => $request->data['status'],
-            'password' => Hash::make($request->data['password']),
+            'status' => 'A',
+            'password' => Hash::make($request->data['password'])
         ]);
+    }
+
+    public function find(Request $request){
+
     }
 
     public function validateRegionCommune($request){ 
@@ -129,7 +147,7 @@ class AuthController extends Controller
             'address' => $data['address'],
             'date_reg' => date('Y-m-d H:i:s'),
             'status' => 'A',
-            'password' => Hash::make($data['password']),
+            'password' => $data['password'],
         ]);
         $response = [
             'success' => false,
