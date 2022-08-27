@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -21,7 +21,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login', 'register']]);
+        $this->middleware('auth:api', ['except' => ['login', 'register', 'find']]);
     }
 
     /**
@@ -76,7 +76,53 @@ class AuthController extends Controller
     }
 
     public function find(Request $request){
-
+        $aResponse = [
+            'success' => false,
+            'message' => "No se ingresaron filtros validos para realizar la busqueda"
+        ];
+        if(isset($request->dni) || isset($request->email)){
+            $usuario = [];
+            if(isset($request->dni)){
+                $usuario = User::where('customers.status', 'A')
+                    ->where('customers.dni', $request->dni)
+                    ->join('regions', 'regions.id_reg', 'customers.id_reg')
+                    ->join('communes', 'communes.id_com', 'customers.id_com')
+                    ->select(DB::raw('
+                        customers.name, 
+                        customers.last_name, 
+                        customers.address, 
+                        regions.description AS region, 
+                        communes.description AS municipio
+                    '))
+                    ->get();
+            }else if(isset($request->email)){
+                $usuario = User::where('customers.status', 'A')
+                    ->where('customers.email', $request->email)
+                    ->join('regions', 'regions.id_reg', 'customers.id_reg')
+                    ->join('communes', 'communes.id_com', 'customers.id_com')
+                    ->select(DB::raw('
+                        customers.name, 
+                        customers.last_name, 
+                        customers.address, 
+                        regions.description AS region, 
+                        communes.description AS municipio
+                    '))
+                    ->get();
+            }
+            if(count($usuario)){
+                $aResponse = [
+                    'success' => true,
+                    'message' => "Se encontro un usuario relacionado con los datos ingresados",
+                    'data' => $usuario
+                ];
+            }else{
+                $aResponse = [
+                    'success' => true,
+                    'message' => "No se encontraron usuarios relacionados con los datos ingresados"
+                ];
+            }
+        }
+        return $aResponse;
     }
 
     public function validateRegionCommune($request){ 
