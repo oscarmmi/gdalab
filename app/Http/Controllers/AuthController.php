@@ -9,6 +9,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Http\Requests\RegisterRequest;
+use App\Models\Regions;
+use App\Models\Communes;
 
 class AuthController extends Controller
 {
@@ -37,14 +39,87 @@ class AuthController extends Controller
     }
 
     public function register(RegisterRequest $request)
-    {
-        //return $request->data;
-        return $this->create($request->data);
+    {   
+        $this->insertLog([
+            'input' => json_encode($request->data, true)            
+        ]);
+        $aResponse = $this->validateRegionCommune($request);
+        if(count($aResponse['errors'])){
+            return $aResponse['errors'];
+        }
+        return $this->create([
+            'dni' => $request->data['dni'],
+            'id_reg' => $aResponse['data']['id_reg'],
+            'id_com' => $aResponse['data']['id_com'],
+            'email' => $request->data['email'],
+            'name' => $request->data['name'],
+            'last_name' => $request->data['last_name'],
+            'address' => $request->data['address'],
+            'date_reg' => date('Y-m-d H:i:s'),
+            'status' => $request->data['status'],
+            'password' => Hash::make($request->data['password']),
+        ]);
+    }
+
+    public function validateRegionCommune($request){ 
+        $aErrors = [];   
+        $id_reg = NULL;
+        $id_com = NULL;    
+        $region = Regions::where('description', $request->data['region'])
+        ->where('status', 'A')
+        ->get();        
+        if(!count($region)){
+            $aErrors = [
+                "success" => false,
+                "message" => "Validation errors",
+                "data" => [
+                    "data.region" => "- El departamento ingresado no existe en el sistema"
+                ]
+            ];
+        }else{
+            $id_reg = $region[0]->id_reg;
+        }
+        $commune = Communes::where('description', $request->data['commune'])
+        ->where('status', 'A')
+        ->get();
+        if(!count($commune)){
+            $aErrors = [
+                "success" => false,
+                "message" => "Validation errors",
+                "data" => [
+                    "data.commune" => "- El municipio ingresado no existe en el sistema"
+                ]
+            ];
+        }        
+        $communeRegion = Communes::join('regions', 'regions.id_reg', 'communes.id_reg')
+        ->where('communes.description', $request->data['commune'])
+        ->where('regions.description', $request->data['region'])
+        ->where('communes.status', 'A')
+        ->where('regions.status', 'A')
+        ->get();
+        if(!count($communeRegion)){
+            $aErrors = [
+                "success" => false,
+                "message" => "Validation errors",
+                "data" => [
+                    "data.commune" => "- El municipio ingresado no esta relacionado con la region ingresada"
+                ]
+            ];
+        }else{
+            $id_com = $communeRegion[0]->id_com;
+        }
+        return [
+            'errors' => $aErrors,
+            'data' => [
+                'id_reg' => $id_reg,
+                'id_com' => $id_com
+            ]
+        ];
     }
 
     protected function create(array $data)
     {        
-        return User::create([
+        $flagCreation = User::create([
             'dni' => $data['dni'],
             'id_reg' => $data['id_reg'],
             'id_com' => $data['id_com'],
@@ -53,9 +128,25 @@ class AuthController extends Controller
             'last_name' => $data['last_name'],
             'address' => $data['address'],
             'date_reg' => date('Y-m-d H:i:s'),
-            'status' => $data['status'],
+            'status' => 'A',
             'password' => Hash::make($data['password']),
         ]);
+        $response = [
+            'success' => false,
+            'message' => "Error al insertar el usuario"
+        ];
+        if($flagCreation){
+            $response = [
+                'success' => true,
+                'message' => "El usuario fue creado exitosamente con ID # ".$flagCreation->id
+            ];
+        }
+        unset($data['password']);
+        $this->insertLog([
+            'input' => json_encode($data, true),
+            'output' => json_encode($response, true),
+        ], 1);
+        return $response;
     }
 
     /**

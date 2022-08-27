@@ -25,25 +25,14 @@ class RegisterRequest extends FormRequest
      */
     public function rules()
     {
-        /*
-        'dni',
-        'id_reg',
-        'id_com',
-        'email',
-        'name',
-        'last_name',
-        'address',
-        'date_reg',
-        'status'
-        */
         return [
-            'data.dni' => 'required| max:255 |min: 3',
+            'data.dni' => 'required| max:255 |min: 3|unique:customers,dni,'.$this->input('dni'),
             'data.commune' => 'required|max:255',
             'data.region' => 'required|max:255',
             'data.name' => 'required|max:255',
             'data.last_name' => 'required|max:255',
             'data.address' => 'required|max:255',
-            'data.status' => 'required|max:5',
+            //'data.status' => 'required|max:5',
             'data.password' => 'required|max:255|min: 6',
             'data.email' => 'required|email|unique:customers,email,'.$this->input('email'),
         ];
@@ -54,6 +43,7 @@ class RegisterRequest extends FormRequest
             'data.dni.required' =>  '- Se debe ingresar un DNI', 
             'data.dni.max' =>  '- El DNI debe tener como maximo 255 caracteres', 
             'data.dni.min' =>  '- El DNI debe tener como minimo 3 caracteres', 
+            'data.dni.unique' =>  '- El DNI debe ser unico y el actual ya se encuentra registrado' ,
             'data.commune.required' =>  '- Se debe ingresar el nombre de un municipio', 
             'data.commune.max' =>  '- El municipio  debe tener como maximo 255 caracteres', 
             'data.region.required' =>  '- Se debe ingresar el nombre de un departamento', 
@@ -62,8 +52,8 @@ class RegisterRequest extends FormRequest
             'data.name.max' =>  '- El nombre debe tener como maximo 255 caracteres', 
             'data.address.required' =>  '- Se debe ingresar una direccion', 
             'data.address.max' =>  '- La direccion debe tener como maximo 255 caracteres', 
-            'data.status.required' =>  '- Se debe ingresar un status', 
-            'data.status.max' =>  '- La direccion debe tener como maximo 255 caracteres', 
+            //'data.status.required' =>  '- Se debe ingresar un status', 
+            //'data.status.max' =>  '- La direccion debe tener como maximo 255 caracteres', 
             'data.password.required' =>  '- Se debe ingresar un password', 
             'data.password.max' =>  '- El password debe tener como maximo 255 caracteres', 
             'data.password.min' =>  '- El password debe tener como maximo 6 caracteres', 
@@ -74,19 +64,11 @@ class RegisterRequest extends FormRequest
         ];
     }
 
-    public function failedValidation(Validator $validator)
-
-    {
-
+    public function failedValidation(Validator $validator){
         throw new HttpResponseException(response()->json([
-
             'success'   => false,
-
             'message'   => 'Validation errors',
-
             'data'      => $validator->errors()
-
         ]));
-
     }
 }
