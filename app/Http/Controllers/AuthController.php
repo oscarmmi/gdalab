@@ -21,7 +21,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login', 'register']]);
+        $this->middleware('auth:api', ['except' => ['login', 'register', 'logout', 'find', 'delete', 'refresh']]);
     }
 
     /**
@@ -54,15 +54,36 @@ class AuthController extends Controller
         return $finalReponse;
     }
 
+    public function validateUniqueEmailandDni($dni, $email){
+        $aErrors = [];
+        $uniqueUser = User::where('dni', $dni)->where('status', '!=', 'trash')->get();
+        if(count($uniqueUser)){
+            $aErrors[] = ['data.dni.unique' => '- El DNI ingresado ya se encuentra registrado'];
+        }
+        $uniqueEmail = User::where('email', $email)->where('status', '!=', 'trash')->get();
+        if(count($uniqueEmail)){
+            $aErrors[] = ['data.email.unique' => '- El email ingresado ya se encuentra registrado'];
+        }
+        return $aErrors;
+    }
+
     public function register(RegisterRequest $request)
     {   
         $this->insertLog([
             'input' => json_encode($request->data, true),
             'action' => 'register'        
-        ]);
+        ]);        
         $aResponse = $this->validateRegionCommune($request);
         if(count($aResponse['errors'])){
             return $aResponse['errors'];
+        }
+        $aErrors = $this->validateUniqueEmailandDni($request->data['dni'], $request->data['email']);
+        if(count($aErrors)){
+            return [
+                "success" => false,
+                "message" => "Validation errors",
+                "data" => $aErrors
+            ];
         }
         return $this->create([
             'dni' => $request->data['dni'],
@@ -95,7 +116,7 @@ class AuthController extends Controller
             $usuario->save();
             $aResponse = [
                 'success' => true,
-                'message' => "El usuario ingresado fue eliminado exitosamente"
+                'message' => "El usuario fue eliminado exitosamente"
             ];
         }else{
             $aResponse = [
@@ -176,8 +197,8 @@ class AuthController extends Controller
         $id_reg = NULL;
         $id_com = NULL;    
         $region = Regions::where('description', $request->data['region'])
-        ->where('status', 'A')
-        ->get();        
+            ->where('status', 'A')
+            ->get();        
         if(!count($region)){
             $aErrors = [
                 "success" => false,
@@ -190,8 +211,8 @@ class AuthController extends Controller
             $id_reg = $region[0]->id_reg;
         }
         $commune = Communes::where('description', $request->data['commune'])
-        ->where('status', 'A')
-        ->get();
+            ->where('status', 'A')
+            ->get();
         if(!count($commune)){
             $aErrors = [
                 "success" => false,
@@ -202,11 +223,11 @@ class AuthController extends Controller
             ];
         }        
         $communeRegion = Communes::join('regions', 'regions.id_reg', 'communes.id_reg')
-        ->where('communes.description', $request->data['commune'])
-        ->where('regions.description', $request->data['region'])
-        ->where('communes.status', 'A')
-        ->where('regions.status', 'A')
-        ->get();
+            ->where('communes.description', $request->data['commune'])
+            ->where('regions.description', $request->data['region'])
+            ->where('communes.status', 'A')
+            ->where('regions.status', 'A')
+            ->get();
         if(!count($communeRegion)){
             $aErrors = [
                 "success" => false,

@@ -26,7 +26,8 @@ class RegisterRequest extends FormRequest
     public function rules()
     {
         return [
-            'data.dni' => 'required| max:255 |min: 3|unique:customers,dni,'.$this->input('dni'),
+            //'data.dni' => 'required| max:255 |min: 3|unique:customers,dni,'.$this->input('dni'),
+            'data.dni' => 'required| max:255 |min: 3',
             'data.commune' => 'required|max:255',
             'data.region' => 'required|max:255',
             'data.name' => 'required|max:255',
@@ -34,7 +35,7 @@ class RegisterRequest extends FormRequest
             'data.address' => 'required|max:255',
             //'data.status' => 'required|max:5',
             'data.password' => 'required|max:255|min: 6',
-            'data.email' => 'required|email|unique:customers,email,'.$this->input('email'),
+            'data.email' => 'required|email'
         ];
     }
 
@@ -43,7 +44,7 @@ class RegisterRequest extends FormRequest
             'data.dni.required' =>  '- Se debe ingresar un DNI', 
             'data.dni.max' =>  '- El DNI debe tener como maximo 255 caracteres', 
             'data.dni.min' =>  '- El DNI debe tener como minimo 3 caracteres', 
-            'data.dni.unique' =>  '- El DNI debe ser unico y el actual ya se encuentra registrado' ,
+            //'data.dni.unique' =>  '- El DNI debe ser unico y el actual ya se encuentra registrado' ,
             'data.commune.required' =>  '- Se debe ingresar el nombre de un municipio', 
             'data.commune.max' =>  '- El municipio  debe tener como maximo 255 caracteres', 
             'data.region.required' =>  '- Se debe ingresar el nombre de un departamento', 
@@ -59,8 +60,8 @@ class RegisterRequest extends FormRequest
             'data.password.min' =>  '- El password debe tener como maximo 6 caracteres', 
             'data.email.required' =>  '- Se debe ingresar un email', 
             'data.email.email' =>  '- El email ingresado no tiene un formato valido', 
-            'data.email.max' =>  '- El email debe tener como maximo 255 caracteres', 
-            'data.email.unique' =>  '- El email debe ser unico y el actual ya se encuentra registrado' 
+            'data.email.max' =>  '- El email debe tener como maximo 255 caracteres'
+            //'data.email.unique' =>  '- El email debe ser unico y el actual ya se encuentra registrado' 
         ];
     }
 
