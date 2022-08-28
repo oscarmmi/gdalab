@@ -1,0 +1,189 @@
+{
+	"info": {
+		"_postman_id": "81b01503-4b31-413e-91bc-9988d4c4fc2a",
+		"name": "GdaLab",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "15572031"
+	},
+	"item": [
+		{
+			"name": "REGISTER",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"data\": {\r\n        \"dni\": \"1095951957\",\r\n        \"region\": \"Santander\",\r\n        \"commune\": \"Giron\",\r\n        \"email\": \"karolrueda18@gmail.com\",\r\n        \"name\": \"Karol\",\r\n        \"last_name\": \"Rueda\",\r\n        \"address\": \"Cl 17 # 12 -70\",\r\n        \"password\": \"sebas21\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://127.0.0.1:8000/api/auth/register"
+			},
+			"response": []
+		},
+		{
+			"name": "LOGIN",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "email",
+							"value": "karolrueda18@gmail.com",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "sebas21",
+							"type": "text"
+						}
+					]
+				},
+				"url": "http://127.0.0.1:8000/api/auth/login"
+			},
+			"response": []
+		},
+		{
+			"name": "FIND",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/auth/find?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMjcuMC4wLjE6ODAwMFwvYXBpXC9hdXRoXC9sb2dpbiIsImlhdCI6MTY2MTY1NzUyNCwiZXhwIjoxNjYxNjYxMTI0LCJuYmYiOjE2NjE2NTc1MjQsImp0aSI6ImRjMUMxN2c0QVlKNHg5RUkiLCJzdWIiOjEsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.o0yHGXSK2WqsZfDQ9-jM_rH4VxiWLTIHO0hwinJ1Cy8&dni=1095951957",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"auth",
+						"find"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMjcuMC4wLjE6ODAwMFwvYXBpXC9hdXRoXC9sb2dpbiIsImlhdCI6MTY2MTY1NzUyNCwiZXhwIjoxNjYxNjYxMTI0LCJuYmYiOjE2NjE2NTc1MjQsImp0aSI6ImRjMUMxN2c0QVlKNHg5RUkiLCJzdWIiOjEsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.o0yHGXSK2WqsZfDQ9-jM_rH4VxiWLTIHO0hwinJ1Cy8"
+						},
+						{
+							"key": "dni",
+							"value": "1095951957"
+						},
+						{
+							"key": "email",
+							"value": "karolrueda18@gmail.com",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/auth/delete?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMjcuMC4wLjE6ODAwMFwvYXBpXC9hdXRoXC9sb2dpbiIsImlhdCI6MTY2MTY1NTQyMCwiZXhwIjoxNjYxNjU5MDIwLCJuYmYiOjE2NjE2NTU0MjAsImp0aSI6InNxOGtYQlczeEE4Qk5OT0MiLCJzdWIiOjYsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.if0vJkBB45WOCgz4PYeYoXj9JX8K3Ct-UcLORHXqDPo&dni=1095951957&email=karolrueda18@gmail.com",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"auth",
+						"delete"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMjcuMC4wLjE6ODAwMFwvYXBpXC9hdXRoXC9sb2dpbiIsImlhdCI6MTY2MTY1NTQyMCwiZXhwIjoxNjYxNjU5MDIwLCJuYmYiOjE2NjE2NTU0MjAsImp0aSI6InNxOGtYQlczeEE4Qk5OT0MiLCJzdWIiOjYsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.if0vJkBB45WOCgz4PYeYoXj9JX8K3Ct-UcLORHXqDPo"
+						},
+						{
+							"key": "dni",
+							"value": "1095951957"
+						},
+						{
+							"key": "email",
+							"value": "karolrueda18@gmail.com"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "LOGOUT",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/auth/logout?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMjcuMC4wLjE6ODAwMFwvYXBpXC9hdXRoXC9sb2dpbiIsImlhdCI6MTY2MTY1NTQyMCwiZXhwIjoxNjYxNjU5MDIwLCJuYmYiOjE2NjE2NTU0MjAsImp0aSI6InNxOGtYQlczeEE4Qk5OT0MiLCJzdWIiOjYsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.if0vJkBB45WOCgz4PYeYoXj9JX8K3Ct-UcLORHXqDPo",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"auth",
+						"logout"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMjcuMC4wLjE6ODAwMFwvYXBpXC9hdXRoXC9sb2dpbiIsImlhdCI6MTY2MTY1NTQyMCwiZXhwIjoxNjYxNjU5MDIwLCJuYmYiOjE2NjE2NTU0MjAsImp0aSI6InNxOGtYQlczeEE4Qk5OT0MiLCJzdWIiOjYsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.if0vJkBB45WOCgz4PYeYoXj9JX8K3Ct-UcLORHXqDPo"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "REFRESH",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/auth/refresh?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMjcuMC4wLjE6ODAwMFwvYXBpXC9hdXRoXC9sb2dpbiIsImlhdCI6MTY2MTY1NTU4NiwiZXhwIjoxNjYxNjU5MTg2LCJuYmYiOjE2NjE2NTU1ODYsImp0aSI6InV4b2tCWWJQSmZTRHM1OE8iLCJzdWIiOjYsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.AFAlPBkLfuctWStZ_BA6s7CZlyYiC2Vb_SZ-h5zAHHY",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"auth",
+						"refresh"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMjcuMC4wLjE6ODAwMFwvYXBpXC9hdXRoXC9sb2dpbiIsImlhdCI6MTY2MTY1NTU4NiwiZXhwIjoxNjYxNjU5MTg2LCJuYmYiOjE2NjE2NTU1ODYsImp0aSI6InV4b2tCWWJQSmZTRHM1OE8iLCJzdWIiOjYsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.AFAlPBkLfuctWStZ_BA6s7CZlyYiC2Vb_SZ-h5zAHHY"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
